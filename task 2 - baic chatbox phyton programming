@@ -1,0 +1,56 @@
+import nltk
+from nltk.chat.util import Chat, reflections
+
+# Define a set of possible pairs of patterns and responses
+pairs = [
+    [
+        r"(hi|hello|hey)",
+        ["Hello! How can I help you today?", "Hey there! How's it going?", "Hi! What can I do for you?"]
+    ],
+    [
+        r"what is your name ?",
+        ["I'm a chatbot created to assist you. You can call me ChatBot.", "My name is ChatBot! What's yours?"]
+    ],
+    [
+        r"how are you ?",
+        ["I'm just a bunch of code, but I'm doing great! How about you?", "I'm doing fine! Thanks for asking."]
+    ],
+    [
+        r"i'm (.*)",
+        ["Nice to meet you, %1! How can I assist you today?", "Hi %1! What would you like to talk about?"]
+    ],
+    [
+        r"what can you do ?",
+        ["I can have basic conversations with you! You can ask me about my name, or say hello."]
+    ],
+    [
+        r"thank you|thanks",
+        ["You're welcome!", "Happy to help!", "No problem!"]
+    ],
+    [
+        r"bye|exit",
+        ["Goodbye! Have a great day!", "Bye! Come back soon!", "See you later!"]
+    ],
+    [
+        r"(.*)",
+        ["I didn't quite understand that. Can you ask in a different way?", "I'm not sure about that. Could you rephrase?"]
+    ]
+]
+
+# Create a chatbot using nltk's Chat function
+def basic_chatbot():
+    print("ChatBot: Hi! I am a basic chatbot. Type 'bye' to exit.")
+    chatbot = Chat(pairs, reflections)
+    
+    # Loop until the user says 'bye'
+    while True:
+        user_input = input("You: ").lower()
+        if user_input in ['bye', 'exit']:
+            print("ChatBot: Goodbye! Have a nice day.")
+            break
+        response = chatbot.respond(user_input)
+        print(f"ChatBot: {response}")
+
+if __name__ == "__main__":
+    nltk.download('punkt')  # Download NLTK data
+    basic_chatbot()
