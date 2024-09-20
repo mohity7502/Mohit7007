@@ -1,0 +1,60 @@
+import os
+import shutil
+
+# Define file type categories
+FILE_CATEGORIES = {
+    'images': ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.tiff'],
+    'documents': ['.pdf', '.docx', '.doc', '.txt', '.xlsx', '.pptx'],
+    'videos': ['.mp4', '.mkv', '.avi', '.mov'],
+    'audio': ['.mp3', '.wav', '.aac'],
+    'archives': ['.zip', '.rar', '.tar', '.gz'],
+    'scripts': ['.py', '.js', '.sh'],
+    'others': []  # Will be used for any file types not covered above
+}
+
+# Function to create directories if they don't exist
+def create_directories(base_path):
+    for category in FILE_CATEGORIES.keys():
+        category_path = os.path.join(base_path, category)
+        if not os.path.exists(category_path):
+            os.makedirs(category_path)
+
+# Function to move file to the appropriate folder
+def organize_files(folder_path):
+    create_directories(folder_path)
+    
+    # Loop through files in the given directory
+    for filename in os.listdir(folder_path):
+        file_path = os.path.join(folder_path, filename)
+        
+        # Skip directories
+        if os.path.isdir(file_path):
+            continue
+        
+        # Get the file extension
+        file_extension = os.path.splitext(filename)[1].lower()
+        
+        # Move the file to the corresponding folder
+        moved = False
+        for category, extensions in FILE_CATEGORIES.items():
+            if file_extension in extensions:
+                destination_folder = os.path.join(folder_path, category)
+                shutil.move(file_path, destination_folder)
+                print(f"Moved {filename} to {category}")
+                moved = True
+                break
+        
+        # If file type is unknown, move to 'others' folder
+        if not moved:
+            shutil.move(file_path, os.path.join(folder_path, 'others'))
+            print(f"Moved {filename} to others")
+
+if __name__ == "__main__":
+    folder_to_organize = input("Enter the folder path you want to organize: ")
+    
+    # Ensure the provided path exists
+    if os.path.exists(folder_to_organize):
+        organize_files(folder_to_organize)
+        print("Files have been organized successfully.")
+    else:
+        print(f"The folder '{folder_to_organize}' does not exist.")
